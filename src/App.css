@@ -22,13 +22,16 @@
 .container .table-header {
   font-weight: 800;
 }
+
 .row {
   align-items: center;
 }
 
+.col {
+  justify-content: center;
+}
+
 .flex-container {
-  /* position: fixed;
-  bottom: 10%; */
   display: flex;
   justify-content: space-around;
   width: 100%;

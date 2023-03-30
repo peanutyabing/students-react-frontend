@@ -1,4 +1,3 @@
-import Students from "./Components/Students";
 import "./App.css";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
@@ -16,7 +15,6 @@ function App() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {/* <Students /> */}
       <Outlet />
     </div>
   );

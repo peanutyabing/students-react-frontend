@@ -34,7 +34,7 @@ export default function AddForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Row>
-        <Col>New student:</Col>
+        <Col></Col>
         <Col>
           <Form.Control
             name="first_name"
