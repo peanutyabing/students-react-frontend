@@ -1,13 +1,23 @@
-import { Outlet } from "react-router-dom";
+import Students from "./Components/Students";
 import "./App.css";
+import { Container, Navbar, Nav } from "react-bootstrap";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Students</h1>
-        <Outlet />
-      </header>
+      <Navbar>
+        <Container>
+          <Navbar.Brand href="/">Students</Navbar.Brand>
+          <Navbar.Collapse>
+            <Nav>
+              <Nav.Link>Filter</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      {/* <Students /> */}
+      <Outlet />
     </div>
   );
 }

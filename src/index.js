@@ -9,10 +9,9 @@ import Students from "./Components/Students";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
+    <App />
     <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<Students />} />
-      </Route>
+      <Route path="/" element={<Students />}></Route>
     </Routes>
   </BrowserRouter>
 );
