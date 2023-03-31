@@ -26,13 +26,21 @@
   align-items: center;
 }
 
-/* .col {
-  justify-content: center;
-} */
-
 .flex-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
+  width: 70%;
+  margin: 2vmin 0;
+}
+
+.form-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin: 2vmin 0;
+}
+
+.filter-input {
+  width: 75%;
 }

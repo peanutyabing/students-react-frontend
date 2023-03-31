@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col, ButtonGroup, Button } from "react-bootstrap";
 import FormRow from "./FormRow.js";
+import { Outlet, useSearchParams, Link } from "react-router-dom";
 
 export default function Students() {
+  const [searchParams] = useSearchParams();
+
   const [students, setStudents] = useState([]);
   const [addFormShow, setAddFormShow] = useState(false);
   const [editFormShow, setEditFormShow] = useState(false);
@@ -12,15 +15,27 @@ export default function Students() {
 
   useEffect(() => {
     getStudents();
-  }, [changeLog]);
+  }, [changeLog, searchParams]);
 
   const getStudents = async () => {
     try {
-      const studentsRes = await axios.get("http://localhost:3004");
+      const studentsRes = await axios.get("http://localhost:3004", {
+        params: getSearchParams(),
+      });
       setStudents(studentsRes.data);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const getSearchParams = () => {
+    const params = Object.fromEntries(searchParams.entries());
+    for (const key in params) {
+      if (!params[key]) {
+        delete params[key];
+      }
+    }
+    return params;
   };
 
   const handleEdit = async (e) => {
@@ -105,6 +120,7 @@ export default function Students() {
 
   return (
     <div className="App-header">
+      <Outlet />
       <Container className="table">
         <Row key="table-header" className="table-header">
           <Col>Student ID</Col>
@@ -134,6 +150,12 @@ export default function Students() {
         >
           Add student
         </Button>
+        <Link to={"/filter"}>
+          <Button variant="outline-light">Search</Button>
+        </Link>
+        <Link to={"/"}>
+          <Button variant="outline-light">Clear search</Button>
+        </Link>
       </div>
     </div>
   );
