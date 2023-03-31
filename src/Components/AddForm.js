@@ -30,7 +30,7 @@ export default function AddForm(props) {
     try {
       const newRow = await axios.post("http://localhost:3004", row);
       console.log(newRow.data);
-      props.add({ change: "add", content: row });
+      props.logChange({ change: "add", content: row });
       props.hideAddForm();
       setRow(blankForm);
     } catch (err) {

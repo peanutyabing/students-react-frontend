@@ -21,6 +21,22 @@ export default function Students() {
     }
   };
 
+  const handleDelete = async (e) => {
+    let message =
+      "Are you sure you want to delete this row? All data on this student will be deleted.";
+    if (window.confirm(message) === true) {
+      try {
+        const deleteRow = await axios.delete(
+          `http://localhost:3004/id/${e.target.id}`
+        );
+        console.log(deleteRow.data);
+        logChange({ change: "delete", content: `row with id ${e.target.id}` });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   const renderStudents = () => {
     if (!students) return;
     return students.map((student) => (
@@ -35,7 +51,12 @@ export default function Students() {
             <Button size="sm" variant="light">
               E
             </Button>
-            <Button size="sm" variant="secondary">
+            <Button
+              id={student.id}
+              size="sm"
+              variant="secondary"
+              onClick={handleDelete}
+            >
               D
             </Button>
           </ButtonGroup>
@@ -63,7 +84,7 @@ export default function Students() {
       </Container>
       {addFormShow && (
         <AddForm
-          add={logChange}
+          logChange={logChange}
           hideAddForm={() => {
             setAddFormShow(false);
           }}
