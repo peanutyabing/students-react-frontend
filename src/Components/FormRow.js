@@ -9,14 +9,14 @@ import {
   ButtonGroup,
 } from "react-bootstrap";
 
-export default function AddForm(props) {
-  const blankForm = {
-    first_name: "",
-    last_name: "",
-    mobile: "",
-    gender: undefined,
+export default function FormRow(props) {
+  const defaultForm = {
+    first_name: props.firstName ? props.firstName : "",
+    last_name: props.lastName ? props.lastName : "",
+    mobile: props.mobile ? props.mobile : "",
+    gender: props.gender ? props.gender : false,
   };
-  const [row, setRow] = useState(blankForm);
+  const [row, setRow] = useState(defaultForm);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -27,14 +27,29 @@ export default function AddForm(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const newRow = await axios.post("http://localhost:3004", row);
-      console.log(newRow.data);
-      props.logChange({ change: "add", content: row });
-      props.hideAddForm();
-      setRow(blankForm);
-    } catch (err) {
-      console.log(err.message);
+    if (props.editing) {
+      try {
+        const updatedRow = await axios.put(
+          `http://localhost:3004/id/${props.id}`,
+          row
+        );
+        console.log(updatedRow.data);
+        props.logChange({ change: "edit", content: row });
+        props.hideFormRow();
+        setRow(defaultForm);
+      } catch (err) {
+        console.log(err.message);
+      }
+    } else {
+      try {
+        const newRow = await axios.post("http://localhost:3004", row);
+        console.log(newRow.data);
+        props.logChange({ change: "add", content: row });
+        props.hideFormRow();
+        setRow(defaultForm);
+      } catch (err) {
+        console.log(err.message);
+      }
     }
   };
 
@@ -47,6 +62,7 @@ export default function AddForm(props) {
             <Form.Control
               name="first_name"
               value={row.first_name}
+              placeholder="First name"
               onChange={handleChange}
             />
           </Col>
@@ -54,6 +70,7 @@ export default function AddForm(props) {
             <Form.Control
               name="last_name"
               value={row.last_name}
+              placeholder="Last name"
               onChange={handleChange}
             />
           </Col>
@@ -61,6 +78,7 @@ export default function AddForm(props) {
             <Form.Control
               name="mobile"
               value={row.mobile}
+              placeholder="Mobile"
               onChange={handleChange}
             />
           </Col>
@@ -70,7 +88,6 @@ export default function AddForm(props) {
               value={row.gender}
               onChange={handleChange}
             >
-              <option></option>
               <option value={false}>Female</option>
               <option value={true}>Male</option>
             </Form.Select>
@@ -84,7 +101,7 @@ export default function AddForm(props) {
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  props.hideAddForm();
+                  props.hideFormRow();
                 }}
               >
                 ✘

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col, ButtonGroup, Button } from "react-bootstrap";
-import AddForm from "./AddForm.js";
+import FormRow from "./FormRow.js";
 
 export default function Students() {
   const [students, setStudents] = useState([]);
   const [addFormShow, setAddFormShow] = useState(false);
+  const [editFormShow, setEditFormShow] = useState(false);
+  const [editingRowId, setEditingRowId] = useState(0);
   const [changeLog, setChangeLog] = useState([]);
 
   useEffect(() => {
@@ -19,6 +21,11 @@ export default function Students() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleEdit = async (e) => {
+    setEditFormShow(true);
+    setEditingRowId(parseInt(e.target.id));
   };
 
   const handleDelete = async (e) => {
@@ -39,30 +46,57 @@ export default function Students() {
 
   const renderStudents = () => {
     if (!students) return;
-    return students.map((student) => (
-      <Row key={student.id}>
-        <Col>{student.id}</Col>
-        <Col>{student.first_name}</Col>
-        <Col>{student.last_name}</Col>
-        <Col>{student.mobile}</Col>
-        <Col>{student.gender ? "Male" : "Female"}</Col>
-        <Col>
-          <ButtonGroup>
-            <Button size="sm" variant="light">
-              E
-            </Button>
-            <Button
+    const render = students.map((student) => {
+      if (student.id === editingRowId && editFormShow) {
+        return (
+          <Row key={student.id}>
+            <FormRow
+              logChange={logChange}
+              editing={true}
               id={student.id}
-              size="sm"
-              variant="secondary"
-              onClick={handleDelete}
-            >
-              D
-            </Button>
-          </ButtonGroup>
-        </Col>
-      </Row>
-    ));
+              firstName={student.first_name}
+              lastName={student.last_name}
+              mobile={student.mobile}
+              gender={student.gender}
+              hideFormRow={() => {
+                setEditFormShow(false);
+              }}
+            />
+          </Row>
+        );
+      } else {
+        return (
+          <Row key={student.id}>
+            <Col>{student.id}</Col>
+            <Col>{student.first_name}</Col>
+            <Col>{student.last_name}</Col>
+            <Col>{student.mobile}</Col>
+            <Col>{student.gender ? "Male" : "Female"}</Col>
+            <Col>
+              <ButtonGroup>
+                <Button
+                  id={student.id}
+                  size="sm"
+                  variant="light"
+                  onClick={handleEdit}
+                >
+                  E
+                </Button>
+                <Button
+                  id={student.id}
+                  size="sm"
+                  variant="secondary"
+                  onClick={handleDelete}
+                >
+                  D
+                </Button>
+              </ButtonGroup>
+            </Col>
+          </Row>
+        );
+      }
+    });
+    return render;
   };
 
   const logChange = (change) => {
@@ -83,9 +117,10 @@ export default function Students() {
         {renderStudents()}
       </Container>
       {addFormShow && (
-        <AddForm
+        <FormRow
           logChange={logChange}
-          hideAddForm={() => {
+          editing={false}
+          hideFormRow={() => {
             setAddFormShow(false);
           }}
         />
